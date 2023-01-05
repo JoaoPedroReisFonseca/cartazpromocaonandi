@@ -1,40 +1,41 @@
 from reportlab.pdfgen import canvas
+import pandas as pd
 
 def GeneratePDFA4(lista):
     try:
-        nome_pdf = lista["codigo"]
+        nome_pdf = lista.CODIGO
         pdf = canvas.Canvas('{}.pdf'.format(nome_pdf))
 
         if(len(lista["nome"]) > 10):
           pdf.setFont("Helvetica-Bold", 40)
-          pdf.drawString(40, 600, lista["nome"].upper())
+          pdf.drawString(40, 600, lista.NOME.upper())
         else:
           pdf.setFont("Helvetica-Bold", 80)
-          pdf.drawString(40, 600, lista["nome"].upper())
+          pdf.drawString(40, 600, lista.NOME.upper())
 
         pdf.setTitle(nome_pdf)
 
 
         pdf.setFont("Helvetica", 30)
-        pdf.drawString(40, 560, lista["marca"].upper()+"  " +lista["gramagem"].upper())
+        pdf.drawString(40, 560, lista.MARCA.upper()+"  " +lista.GRAMAGEM.upper())
 
-        if(len(lista["preco"].split(',')[0]) < 2):
+        if(len(lista.PREÇO.split(',')[0]) < 2):
           pdf.setFont("Helvetica-Bold", 30)
           pdf.drawString(110,330, 'R$')
           pdf.setFont("Helvetica-Bold", 250)
-          pdf.drawString(150,300, lista["preco"].split(',')[0])
+          pdf.drawString(150,300, lista.PREÇO.split(',')[0])
           pdf.setFont("Helvetica-Bold", 100)
-          pdf.drawString(280,380, ","+lista["preco"].split(',')[1])
+          pdf.drawString(280,380, ","+lista.PREÇO.split(',')[1])
         else:
           pdf.setFont("Helvetica-Bold", 30)
           pdf.drawString(80,330, 'R$')
           pdf.setFont("Helvetica-Bold", 250)
-          pdf.drawString(120,300, lista["preco"].split(',')[0])
+          pdf.drawString(120,300, lista.PREÇO.split(',')[0])
           pdf.setFont("Helvetica-Bold", 100)
-          pdf.drawString(390,380, ","+lista["preco"].split(',')[1])
+          pdf.drawString(390,380, ","+lista.PREÇO.split(',')[1])
 
         pdf.setFont("Helvetica-Bold", 30)
-        pdf.drawString(450,275, lista["tipo"].upper())
+        pdf.drawString(450,275, lista.TIPO.upper())
 
         pdf.rotate(15)
         pdf.rect(270, 180, 250, 4, fill=True)
@@ -45,13 +46,8 @@ def GeneratePDFA4(lista):
     except:
         print('Erro ao gerar {}.pdf'.format(nome_pdf))
 
-listas = [
-  {"codigo": "4321", "nome": "cerveja", "marca": "12345678901234567890", "preco":"2,49", "gramagem": "300ml", "tipo": "und"},
-  {"codigo": "1234", "nome": "PÃO tradicional", "marca": "bauduco", "preco":"12,49", "gramagem": "70gr", "tipo": "und"},
-  {"codigo": "5678", "nome": "maionese", "marca": "hellmann's-pote", "preco":"22,49", "gramagem": "70gr", "tipo": "und"},
-  {"codigo": "5679", "nome": "esponja multiuso", "marca": "hellmann's-pote", "preco":"12,49", "gramagem": "70gr", "tipo": "und"}
-  ]
+produtos = pd.read_excel("Produtos.xlsx", engine='openpyxl')
 
-for lista in listas:
-  GeneratePDFA4(lista)
+for i, row in produtos.iterrows():
+    print(row.MARCA)
 
