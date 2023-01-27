@@ -1,38 +1,45 @@
 from reportlab.pdfgen import canvas
+# import tkinter as tk
 import pandas as pd
 
 def GeneratePDFA4(lista):
     try:
-        nome_pdf = lista.CODIGO
+        nome_pdf = str(lista.CODIGO)
         pdf = canvas.Canvas('{}.pdf'.format(nome_pdf))
 
-        if(len(lista["nome"]) > 10):
+        if(len(lista.NOME) > 10):
           pdf.setFont("Helvetica-Bold", 40)
-          pdf.drawString(40, 600, lista.NOME.upper())
+          pdf.drawString(40, 560, lista.NOME.upper())
         else:
           pdf.setFont("Helvetica-Bold", 80)
-          pdf.drawString(40, 600, lista.NOME.upper())
+          pdf.drawString(40, 560, lista.NOME.upper())
 
         pdf.setTitle(nome_pdf)
 
 
         pdf.setFont("Helvetica", 30)
-        pdf.drawString(40, 560, lista.MARCA.upper()+"  " +lista.GRAMAGEM.upper())
+        pdf.drawString(45, 525, lista.MARCA.upper())
+        
 
-        if(len(lista.PREÇO.split(',')[0]) < 2):
+        pdf.setFont("Helvetica", 20)
+        pdf.drawString(45, 500, lista.GRAMAGEM.upper())
+        
+        preco = str(lista.PREÇO)
+
+        if(len(preco.split('.')[0]) < 2):
           pdf.setFont("Helvetica-Bold", 30)
           pdf.drawString(110,330, 'R$')
           pdf.setFont("Helvetica-Bold", 250)
-          pdf.drawString(150,300, lista.PREÇO.split(',')[0])
+          pdf.drawString(150,300, preco.split('.')[0])
           pdf.setFont("Helvetica-Bold", 100)
-          pdf.drawString(280,380, ","+lista.PREÇO.split(',')[1])
+          pdf.drawString(280,380, ","+preco.split('.')[1])
         else:
           pdf.setFont("Helvetica-Bold", 30)
           pdf.drawString(80,330, 'R$')
           pdf.setFont("Helvetica-Bold", 250)
-          pdf.drawString(120,300, lista.PREÇO.split(',')[0])
+          pdf.drawString(120,300, preco.split('.')[0])
           pdf.setFont("Helvetica-Bold", 100)
-          pdf.drawString(390,380, ","+lista.PREÇO.split(',')[1])
+          pdf.drawString(390,380, ","+preco.split('.')[1])
 
         pdf.setFont("Helvetica-Bold", 30)
         pdf.drawString(450,275, lista.TIPO.upper())
@@ -48,6 +55,10 @@ def GeneratePDFA4(lista):
 
 produtos = pd.read_excel("Produtos.xlsx", engine='openpyxl')
 
-for i, row in produtos.iterrows():
-    print(row.MARCA)
+for i, row in pd.DataFrame(produtos).iterrows():
+    GeneratePDFA4(row)
+    # preco = str(row["PREÇO"])
+    # print(preco.split('.'))
+    # print(row)
 
+# CODIGO NOME PREÇO GRAMAGEM MARCA TIPO
